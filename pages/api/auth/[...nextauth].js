@@ -18,25 +18,31 @@ export default NextAuth({
     }),
   ],
   session: {
-    jwt: true,
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   jwt: {
     // A secret to use for key generation. Defaults to the top-level `secret`.
-    // secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET,
+
     // The maximum age of the NextAuth.js issued JWT in seconds.
     // Defaults to `session.maxAge`.
-    // maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 30,
+
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behavior.
     // async encode({ secret, token, maxAge }) {},
     // async decode({ secret, token }) {},
-    encryption: true,
+    // encryption: true,
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
         return profile.email_verified && profile.email.endsWith("@gmail.com");
+
+        return false;
       }
       return true; // Do different verification for other providers that don't have `email_verified`
     },
@@ -54,6 +60,8 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: "/signin",
+    signIn: "/a/signin",
+    verifyRequest: "/a/verify-request",
+    newUser: "/dashboard",
   },
 });

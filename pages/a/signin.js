@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useFormik } from "formik";
 import {
   Flex,
@@ -37,15 +38,30 @@ const validate = (values) => {
   } else if (password.length < 8) {
     errors.password = "Password must be atleast 8 characters long";
   }
-
   return errors;
 };
 
 const SignIn = ({ providers }) => {
-  const onSubmit = (values) => {
-    setTimeout(() => {
-      formik.setSubmitting(false);
-    }, 1000);
+  const [errors, setErrors] = useState({});
+
+  const onSubmit = async (values) => {
+    const error = validate(values);
+
+    if (Object.keys(error).length > 0) {
+      setErrors(error);
+    } else {
+      setErrors({});
+      console.log(values.email);
+      let { data } = await fetch("/api/a/createUser", {
+        method: "POST",
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
+    }
+
+    formik.setSubmitting(false);
   };
 
   const formik = useFormik({
@@ -53,7 +69,6 @@ const SignIn = ({ providers }) => {
       email: "",
       password: "",
     },
-    validate,
     onSubmit,
   });
   return (
@@ -61,7 +76,7 @@ const SignIn = ({ providers }) => {
       <Box w={"lg"} rounded={"lg"} boxShadow={"lg"} p={8}>
         <form onSubmit={formik.handleSubmit}>
           <VStack spacing={4}>
-            <FormControl id='email' isInvalid={formik.errors.email} isRequired>
+            <FormControl id='email' isInvalid={errors.email} isRequired>
               <FormLabel>Email</FormLabel>
               <Input
                 // type='email'
@@ -69,14 +84,10 @@ const SignIn = ({ providers }) => {
                 onChange={formik.handleChange}
                 value={formik.values.email}
               />
+              <FormErrorMessage>{errors.email}</FormErrorMessage>
               <FormHelperText>We will never share your email.</FormHelperText>
-              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
             </FormControl>
-            <FormControl
-              id='password'
-              isInvalid={formik.errors.password}
-              isRequired
-            >
+            <FormControl id='password' isInvalid={errors.password} isRequired>
               <FormLabel>Password</FormLabel>
               <Input
                 type='password'
@@ -84,7 +95,7 @@ const SignIn = ({ providers }) => {
                 onChange={formik.handleChange}
                 value={formik.values.password}
               />
-              <FormErrorMessage>{formik.errors.password}</FormErrorMessage>
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
             </FormControl>
           </VStack>
           <Button
@@ -102,7 +113,7 @@ const SignIn = ({ providers }) => {
         <Center my={4}>
           <Text as={"h4"}>or</Text>
         </Center>
-        {Object.values(providers).map((provider) => (
+        {(providers || []).map((provider) => (
           <Button
             key={provider.name}
             w={"full"}
@@ -123,11 +134,14 @@ const SignIn = ({ providers }) => {
 export default SignIn;
 
 export async function getServerSideProps(context) {
+  let providers, csrfToken;
   const { req } = context;
   const session = await getSession({ req });
 
-  const providers = await getProviders();
-  const csrfToken = await getCsrfToken(context);
+  providers = Object.values(await getProviders()).filter(
+    (provider) => provider.id !== "email"
+  );
+  csrfToken = await getCsrfToken(context);
 
   //   if (session) {
   //     return {
@@ -138,7 +152,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       providers,
-      csrfToken,
+      csrfToken: csrfToken || null,
     },
   };
 }

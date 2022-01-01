@@ -18,6 +18,8 @@ import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
+  // console.log(session.user);
+
   return (
     // navbar box
     <Box id='navbar'>
@@ -37,16 +39,19 @@ const Navbar = () => {
             <Button py={3} px={5} as={"a"} variant={"link"}>
               Sign Up
             </Button>
-            <Button
-              py={3}
-              px={5}
-              bg={"pink.400"}
-              _hover={{ bg: "pink.300" }}
-              color={"white"}
-              onClick={() => signIn()}
-            >
-              Sign In
-            </Button>
+            c
+            <NavLink href='/a/signin' passHref>
+              <Button
+                as={"a"}
+                py={3}
+                px={5}
+                bg={"pink.400"}
+                _hover={{ bg: "pink.300" }}
+                color={"white"}
+              >
+                Sign In
+              </Button>
+            </NavLink>
           </HStack>
         ) : (
           <Menu>
