@@ -1,5 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+// mongodb imports
+import { isEmailInUse } from "../../../lib/dbAuth";
 
 // initialize the auth
 export default NextAuth({
@@ -14,6 +18,23 @@ export default NextAuth({
           access_type: "offline",
           response_type: "code",
         },
+      },
+    }),
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // The credentials is used to generate a suitable form on the sign in page.
+      // You can specify whatever fields you are expecting to be submitted.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const user = await isEmailInUse(credentials.email);
+        console.log(user);
+        return user;
       },
     }),
   ],
@@ -34,34 +55,33 @@ export default NextAuth({
     // if you want to override the default behavior.
     // async encode({ secret, token, maxAge }) {},
     // async decode({ secret, token }) {},
-    // encryption: true,
+    encryption: true,
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn({ account, profile }) {
-      if (account.provider === "google") {
-        return profile.email_verified && profile.email.endsWith("@gmail.com");
-
-        return false;
+    async signIn(prop) {
+      console.log(prop);
+      if (prop.account.provider === "google") {
+        // return profile.email_verified && profile.email.endsWith("@gmail.com");
       }
       return true; // Do different verification for other providers that don't have `email_verified`
     },
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-      if (account) {
-        token.accessToken = account.access_token;
+    async jwt({ user, token, account }) {
+      console.log("user", user);
+      console.log("account", account);
+      if (user) {
+        token.id = user._id || user.id;
       }
       return token;
     },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
+    async session({ token, session }) {
+      if (token) {
+        session.user.id = token.id;
+      }
       return session;
     },
   },
   pages: {
-    signIn: "/a/signin",
-    verifyRequest: "/a/verify-request",
-    newUser: "/dashboard",
+    signIn: "/a/signup",
   },
 });

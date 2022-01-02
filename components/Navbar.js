@@ -36,10 +36,11 @@ const Navbar = () => {
         </Flex>
         {!session ? (
           <HStack spacing={10}>
-            <Button py={3} px={5} as={"a"} variant={"link"}>
-              Sign Up
-            </Button>
-            c
+            <NavLink href='/a/signup' passHref>
+              <Button py={3} px={5} as={"a"} variant={"link"}>
+                Sign Up
+              </Button>
+            </NavLink>
             <NavLink href='/a/signin' passHref>
               <Button
                 as={"a"}
