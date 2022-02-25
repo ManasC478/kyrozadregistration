@@ -2,12 +2,14 @@ import { Box } from "@chakra-ui/react";
 
 // imports
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
-    <Box maxW={"1200px"} mx={"auto"}>
+    <Box bg={"#f8f8ff"}>
       <Navbar />
-      {children}
+      <Box>{children}</Box>
+      <Footer />
     </Box>
   );
 };

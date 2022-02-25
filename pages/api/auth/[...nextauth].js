@@ -1,9 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-// mongodb imports
-import { isEmailInUse } from "../../../lib/dbAuth";
+import { sign, verify } from "jsonwebtoken";
+// import { createUser } from "../../../lib/dbUser";
 
 // initialize the auth
 export default NextAuth({
@@ -30,11 +29,35 @@ export default NextAuth({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        name: { label: "Business Name", type: "text" },
+        image: { label: "Image", type: "text" },
       },
       async authorize(credentials) {
-        const user = await isEmailInUse(credentials.email);
-        console.log(user);
-        return user;
+        console.log("in authorize nextauth");
+        // throw new Error("test");
+        console.log("credentials", credentials);
+
+        // if (credentials.email && credentials.name) {
+        //   return {
+        //     email: credentials.email,
+        //     name: credentials.name,
+        //     id: credentials.id,
+        //   };
+        // }
+        if (
+          credentials.id &&
+          credentials.email &&
+          credentials.name &&
+          credentials.image
+        ) {
+          return {
+            id: credentials.id,
+            email: credentials.email,
+            name: credentials.name,
+            image: credentials.image,
+          };
+        }
+        return null;
       },
     }),
   ],
@@ -53,35 +76,80 @@ export default NextAuth({
 
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behavior.
-    // async encode({ secret, token, maxAge }) {},
-    // async decode({ secret, token }) {},
+    // async encode({ secret, token, maxAge }) {
+    //   console.log("in jwt encode");
+    //   console.log(token);
+    //   console.log(secret);
+    //   console.log(maxAge);
+    //   // sign the jwt token
+    //   const encodedToken = sign(token, secret, { expiresIn: maxAge });
+    //   console.log(encodedToken);
+    //   return encodedToken;
+    // },
+
+    // async decode({ secret, token }) {
+    //   const verify = jwt.verify(token, secret);
+    //   return verify;
+    // },
     encryption: true,
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async signIn(prop) {
-      console.log(prop);
-      if (prop.account.provider === "google") {
-        // return profile.email_verified && profile.email.endsWith("@gmail.com");
-      }
+    async signIn({ user, account }) {
+      console.log("in signin nextauth");
+      console.log("signIn account: ", account);
+      console.log("user: ", user);
+      // if (account.provider === "google") {
+      //   try {
+      //     const { name, email, image } = user;
+
+      //     // create user using google provider
+      //     await createUser(name, email, image);
+
+      //     return true;
+      //   } catch (error) {
+      //     console.log(error.message);
+      //     return "/a/signup";
+      //   }
+      // return profile.email_verified && profile.email.endsWith("@gmail.com");
+      // }
+
       return true; // Do different verification for other providers that don't have `email_verified`
     },
-    async jwt({ user, token, account }) {
-      console.log("user", user);
-      console.log("account", account);
+    // redirect(prop) {
+    //   console.log("in redirect nextauth");
+    //   // console.log(prop);
+    //   // if (url.startsWith(baseUrl)) return url;
+    //   // // Allows relative callback URLs
+    //   // else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+    //   // return baseUrl;
+    // },
+    async jwt({ user, account, token, isNewUser }) {
+      // console.log("in jwt nextauth");
+      // console.log("token: ", token);
+      // console.log("user: ", user);
+      // console.log("account: ", account);
       if (user) {
-        token.id = user._id || user.id;
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
       }
       return token;
     },
-    async session({ token, session }) {
+    async session({ session, token }) {
+      // console.log("in session nextauth");
+      // console.log("token: ", token);
+      // console.log("session: ", session);
       if (token) {
         session.user.id = token.id;
+        session.user.email = token.email;
       }
       return session;
     },
   },
   pages: {
-    signIn: "/a/signup",
+    signIn: "/a/signin",
+    error: "/500 ",
   },
 });

@@ -6,38 +6,140 @@ import {
   Link,
   Button,
   Avatar,
+  IconButton,
+  InputGroup,
+  Input,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
   MenuDivider,
+  Center,
 } from "@chakra-ui/react";
+import { useUser } from "../lib/CustomHooks/useUser";
+
+// import icons
+import {
+  MenuIcon,
+  HomeIcon,
+  DashboardIcon,
+  LogoutIcon,
+  SettingsIcon,
+} from "../styles/icons";
+
+import UserAvatar from "./UserAvatar";
+
 import NavLink from "next/link";
-import { signIn } from "next-auth/react";
 import { useSession, signOut } from "next-auth/react";
 
+import DefaultAvatar from "../assets/default-avatar.png";
+
+import styles from "../styles/navbar.module.css";
+
 const Navbar = () => {
-  const { data: session, status } = useSession();
-  // console.log(session.user);
+  // const { data: session, status } = useSession();
+  const { signOutUser, session, user } = useUser();
 
   return (
     // navbar box
-    <Box id='navbar'>
-      <Flex justify={"space-between"} align={"center"} px={10} py={5}>
-        <Flex align={"center"}>
-          <Text fontWeight={900} fontSize={"2xl"} mr={10}>
+    <Box borderBottom={"1px solid rgba(0,0,0,0.05)"}>
+      <Flex
+        as={"nav"}
+        maxWidth={1200}
+        mx={"auto"}
+        overflow='hidden'
+        minWidth={300}
+        py={"10px"}
+        px={"5px"}
+        justifyContent='space-between'
+      >
+        <HStack spacing={"10px"} alignItems='center'>
+          <IconButton
+            bg={"none"}
+            aria-label='icon'
+            icon={<MenuIcon />}
+            size='md'
+            isRound
+            fontSize={"2xl"}
+          />
+          <Text fontWeight='bold' fontSize='lg'>
             Kyroz
           </Text>
-          <HStack spacing={4}>
-            <NavLink href='/#' passHref>
-              <Link>Dashboard</Link>
+        </HStack>
+        {/* <InputGroup w={"200px"}>
+          <MenuIcon boxSize={5} />
+          <Input />
+        </InputGroup> */}
+
+        {session ? (
+          <HStack spacing={5} alignItems='center' justifyContent='center'>
+            <NavLink href='/'>
+              <IconButton
+                bg={"none"}
+                aria-label='icon'
+                icon={<HomeIcon />}
+                size='md'
+                isRound
+                fontSize={"2xl"}
+              />
             </NavLink>
+            <NavLink href='/dashboard'>
+              <IconButton
+                bg={"none"}
+                aria-label='icon'
+                icon={<DashboardIcon />}
+                size='md'
+                isRound
+                fontSize={"2xl"}
+              />
+            </NavLink>
+            <Menu>
+              <MenuButton as={"button"} rounded={"full"} aria-label='Options'>
+                <UserAvatar
+                  src={user?.image}
+                  bg={user?.imageBg}
+                  name={user?.name}
+                />
+              </MenuButton>
+              <MenuList minW='0' w={150} p={1}>
+                <Center>
+                  <NavLink href='/u/update' passHref>
+                    <MenuItem
+                      as={"a"}
+                      icon={<SettingsIcon fontSize={"md"} />}
+                      borderRadius={"md"}
+                      _hover={{ color: "black", bg: "gray.200" }}
+                    >
+                      Settings
+                    </MenuItem>
+                  </NavLink>
+                </Center>
+                <Center>
+                  <MenuItem
+                    icon={<LogoutIcon fontSize={"md"} />}
+                    borderRadius={"md"}
+                    _hover={{ color: "black", bg: "gray.200" }}
+                    onClick={signOutUser}
+                  >
+                    Logout
+                  </MenuItem>
+                </Center>
+              </MenuList>
+            </Menu>
           </HStack>
-        </Flex>
-        {!session ? (
+        ) : (
           <HStack spacing={10}>
             <NavLink href='/a/signup' passHref>
-              <Button py={3} px={5} as={"a"} variant={"link"}>
+              <Button
+                as={"a"}
+                py={3}
+                px={5}
+                bg={"none"}
+                borderRadius={"full"}
+                _hover={{
+                  color: "black",
+                }}
+              >
                 Sign Up
               </Button>
             </NavLink>
@@ -46,33 +148,19 @@ const Navbar = () => {
                 as={"a"}
                 py={3}
                 px={5}
-                bg={"pink.400"}
-                _hover={{ bg: "pink.300" }}
+                bg={"#dc3546"}
                 color={"white"}
+                borderRadius={"full"}
+                outline={"none"}
+                _hover={{
+                  bg: "red.500",
+                  color: "white",
+                }}
               >
                 Sign In
               </Button>
             </NavLink>
           </HStack>
-        ) : (
-          <Menu>
-            <MenuButton
-              as={"button"}
-              rounded={"full"}
-              variant={"link"}
-              cursor={"pointer"}
-            >
-              <Avatar size={"sm"} src={session.user.image} />
-            </MenuButton>
-            <MenuList>
-              <MenuItem>Link 1</MenuItem>
-              <MenuItem>Link 2</MenuItem>
-              <MenuDivider />
-              <MenuItem as={"button"} onClick={() => signOut()}>
-                Logout
-              </MenuItem>
-            </MenuList>
-          </Menu>
         )}
       </Flex>
     </Box>

@@ -1,32 +1,69 @@
-import { connectToDatabase } from "../../../lib/mongodb";
-import { isEmailInUse } from "../../../lib/dbAuth";
-import { genSalt, hash } from "bcrypt";
+import { createUserWithCredentials } from "../../../lib/dbUser";
+import { createUserErrorHandler } from "../../../utils/apiErrorHandlers";
 
+const userImageColor = [
+  "red.400",
+  "orange.400",
+  "green.300",
+  "teal.200",
+  "cyan.200",
+  "purple.300",
+  "pink.300",
+];
+
+// create user with credentials
 export default async (req, res) => {
+  if (req.method !== "POST")
+    return res
+      .status(405)
+      .json({
+        success: false,
+        status: 405,
+        message: "Request method not accepted.",
+      });
   try {
-    const { email, password } = JSON.parse(req.body);
+    const { name, email, password } = req.body;
+    const color =
+      userImageColor[Math.floor(Math.random() * (userImageColor.length - 1))];
 
-    //   check is user is already signed up and throw error
-    if (await isEmailInUse(email)) {
-      return res
-        .status(409)
-        .json({ success: false, message: "Email already in user" });
+    // check if all fields are passed in
+    if (name && email && password) {
+      const { user, error } = await createUserWithCredentials({
+        ...req.body,
+        color,
+      });
+
+      // if error in creating account return failed response
+      if (error) {
+        return res.status(error.status).json({
+          success: false,
+          status: error.status,
+          message: error.message,
+        });
+      }
+
+      // return successful response
+      return res.status(201).json({
+        success: true,
+        status: 201,
+        user: {
+          id: user._id,
+          email: user.email,
+          name: user.name,
+          image: user.image,
+        },
+      });
     }
 
-    const { db } = await connectToDatabase();
-
-    //   hash password
-    const salt = await genSalt();
-    const hashedPassword = await hash(password, salt);
-
-    //   insert new user
-    const user = await db
-      .collection("users")
-      .insertOne({ email, password: hashedPassword });
-
-    res.status(201).json({ success: true, message: "New user created" });
+    // if not all fields passed in then return failed response
+    res.status(400).json({
+      success: false,
+      status: 400,
+      message: "Request made with empty fields.",
+    });
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ success: false, message: error.message });
+    console.log("pages/api/a/createUser: ", error.message);
+    const { status, message } = createUserErrorHandler(error);
+    res.status(status).json({ success: false, status, message });
   }
 };

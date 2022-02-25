@@ -1,0 +1,80 @@
+/* .register_photo {
+  background: #f1f7fc;
+  padding: 80px 0;
+}
+.register_photo .image_holder {
+  display: table-cell;
+  width: auto;
+  background: url(../assets/signup/signup.jpg) center/cover no-repeat;
+}
+.register_photo .form_container {
+  display: table;
+  max-width: 900px;
+  width: 90%;
+  margin: 0 auto;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+.register_photo form {
+  display: table-cell;
+  width: 400px;
+  background-color: #fff;
+  padding: 40px 60px;
+  color: #505e6c;
+}
+@media (max-width: 991px) {
+  .register_photo form {
+    padding: 40px;
+  }
+}
+.register_photo form h2 {
+  font-size: 24px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+.register_photo form .form_control {
+  background: #f7f9fc;
+  border: none;
+  border-bottom: 1px solid #dfe7f1;
+  border-radius: 0;
+  box-shadow: none;
+  outline: 0;
+  color: inherit;
+  text-indent: 6px;
+  height: 40px;
+  width: 100%;
+}
+.register_photo form .form_check {
+  font-size: 13px;
+  line-height: 20px;
+}
+.register_photo form .btn_primary {
+  background: #f4476b;
+  border: none;
+  border-radius: 4px;
+  padding: 11px;
+  box-shadow: none;
+  margin-top: 35px;
+  text-shadow: none;
+  outline: 0 !important;
+}
+.register_photo form .btn_primary:active,
+.register_photo form .btn_primary:hover {
+  background: #eb3b60;
+}
+.register_photo form .btn_primary:active {
+  transform: translateY(1px);
+}
+.register_photo form .already {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  color: #6f7a85;
+  opacity: 0.9;
+  text-decoration: none;
+} */
+
+.image_holder {
+  display: table-cell;
+  width: auto;
+  background: url(../assets/signup/signup.jpg) center/cover no-repeat;
+}
