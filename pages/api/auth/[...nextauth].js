@@ -33,17 +33,6 @@ export default NextAuth({
         image: { label: "Image", type: "text" },
       },
       async authorize(credentials) {
-        console.log("in authorize nextauth");
-        // throw new Error("test");
-        console.log("credentials", credentials);
-
-        // if (credentials.email && credentials.name) {
-        //   return {
-        //     email: credentials.email,
-        //     name: credentials.name,
-        //     id: credentials.id,
-        //   };
-        // }
         if (
           credentials.id &&
           credentials.email &&
@@ -73,32 +62,11 @@ export default NextAuth({
     // The maximum age of the NextAuth.js issued JWT in seconds.
     // Defaults to `session.maxAge`.
     maxAge: 60 * 60 * 24 * 30,
-
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behavior.
-    // async encode({ secret, token, maxAge }) {
-    //   console.log("in jwt encode");
-    //   console.log(token);
-    //   console.log(secret);
-    //   console.log(maxAge);
-    //   // sign the jwt token
-    //   const encodedToken = sign(token, secret, { expiresIn: maxAge });
-    //   console.log(encodedToken);
-    //   return encodedToken;
-    // },
-
-    // async decode({ secret, token }) {
-    //   const verify = jwt.verify(token, secret);
-    //   return verify;
-    // },
     encryption: true,
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user, account }) {
-      console.log("in signin nextauth");
-      console.log("signIn account: ", account);
-      console.log("user: ", user);
       // if (account.provider === "google") {
       //   try {
       //     const { name, email, image } = user;
@@ -116,19 +84,7 @@ export default NextAuth({
 
       return true; // Do different verification for other providers that don't have `email_verified`
     },
-    // redirect(prop) {
-    //   console.log("in redirect nextauth");
-    //   // console.log(prop);
-    //   // if (url.startsWith(baseUrl)) return url;
-    //   // // Allows relative callback URLs
-    //   // else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
-    //   // return baseUrl;
-    // },
     async jwt({ user, account, token, isNewUser }) {
-      // console.log("in jwt nextauth");
-      // console.log("token: ", token);
-      // console.log("user: ", user);
-      // console.log("account: ", account);
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -138,9 +94,6 @@ export default NextAuth({
       return token;
     },
     async session({ session, token }) {
-      // console.log("in session nextauth");
-      // console.log("token: ", token);
-      // console.log("session: ", session);
       if (token) {
         session.user.id = token.id;
         session.user.email = token.email;

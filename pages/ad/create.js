@@ -1,22 +1,14 @@
 import { useState, useRef } from "react";
-import { useSession, getSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { CreateAdProvider } from "../../lib/CustomHooks/AdCreate";
 
 import {
   Box,
   Grid,
   Stack,
-  FormControl,
-  Input,
-  FormHelperText,
-  FormErrorMessage,
   Text,
-  Select,
-  Textarea,
   RadioGroup,
   Radio,
-  FormLabel,
-  Image,
   Checkbox,
   List,
   ListItem,
@@ -25,7 +17,6 @@ import {
   MenuList,
   MenuItem,
   Button,
-  Flex,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -64,7 +55,6 @@ const CreateAd = () => {
                 width: "0",
               },
             }}
-            // maxH={"95vh"}
           >
             {/* ad inputs */}
             <Stack spacing={5} maxW={400} w={400} py={5}>

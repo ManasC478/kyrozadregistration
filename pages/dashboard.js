@@ -1,10 +1,9 @@
-import { useSession, getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import NavLink from "next/link";
 import {
   Flex,
   Box,
-  Badge,
   Code,
   Stack,
   Image,
@@ -12,12 +11,9 @@ import {
   SimpleGrid,
   Heading,
   Text,
-  Divider,
   Switch,
-  Icon,
   IconButton,
   Stat,
-  StatLabel,
   StatNumber,
   StatHelpText,
   StatArrow,
@@ -25,7 +21,6 @@ import {
   Table,
   Thead,
   Tbody,
-  Tfoot,
   Tr,
   Th,
   Td,
@@ -33,10 +28,6 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
 } from "@chakra-ui/react";
 import { SmallAddIcon, CopyIcon } from "@chakra-ui/icons";
 import {
@@ -54,7 +45,6 @@ import AdTable from "../components/AdTable";
 const Dashboard = () => {
   const router = useRouter();
   const { data: session } = useSession();
-  console.log(session);
   return (
     <Box py={10} maxW={1200} mx={"auto"}>
       <Stack spacing={10}>
@@ -69,7 +59,6 @@ const Dashboard = () => {
                 {/* total costs box */}
                 <Stack
                   spacing={2}
-                  bg={"white"}
                   p={7}
                   boxShadow={"md"}
                   borderRadius={"3xl"}
@@ -103,7 +92,6 @@ const Dashboard = () => {
                 {/* total users reached box */}
                 <Stack
                   spacing={2}
-                  bg={"white"}
                   p={7}
                   boxShadow={"md"}
                   borderRadius={"3xl"}
@@ -137,7 +125,6 @@ const Dashboard = () => {
                 {/* total users clicked box */}
                 <Stack
                   spacing={2}
-                  bg={"white"}
                   p={7}
                   boxShadow={"md"}
                   borderRadius={"3xl"}
@@ -171,7 +158,6 @@ const Dashboard = () => {
                 {/* net impressions box */}
                 <Stack
                   spacing={2}
-                  bg={"white"}
                   p={7}
                   boxShadow={"md"}
                   borderRadius={"3xl"}
@@ -335,23 +321,5 @@ const Dashboard = () => {
     </Box>
   );
 };
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/a/signin",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {
-      session,
-    },
-  };
-}
 
 export default Dashboard;

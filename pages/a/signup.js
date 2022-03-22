@@ -1,17 +1,13 @@
-import Image from "next/image";
 import NavLink from "next/link";
 import { useState } from "react";
 import { useFormik } from "formik";
 import {
-  Flex,
   Box,
   FormControl,
   Input,
-  FormLabel,
   FormErrorMessage,
   FormHelperText,
   VStack,
-  Link,
   Button,
   Text,
   Center,
@@ -19,23 +15,15 @@ import {
   Checkbox,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
-import {
-  getSession,
-  useSession,
-  getProviders,
-  getCsrfToken,
-  signIn,
-} from "next-auth/react";
 import { useRouter } from "next/router";
 import { useUser } from "../../lib/CustomHooks/useUser";
 
 import styles from "../../styles/signup.module.css";
 import SignupImage from "../../assets/signup/signup.jpg";
 
+// validates form inputs before signing in the user
 const validate = (values) => {
   const { name, email, password, passwordRepeat, terms } = values;
   const errors = {};
@@ -77,10 +65,11 @@ const validate = (values) => {
 
 const SignIn = ({ providers }) => {
   const router = useRouter();
-  const { session, user, status, signUp } = useUser();
+  const { signUp } = useUser();
   const [errors, setErrors] = useState({});
   const [errorAlert, setErrorAlert] = useState({});
 
+  // signs in the user
   const onSubmit = async (values) => {
     const error = validate(values);
 
@@ -96,7 +85,6 @@ const SignIn = ({ providers }) => {
           email: values.email,
           password: values.password,
         });
-        console.log(status);
         router.replace("/u/details");
       } catch (error) {
         console.log("pages/a/signup: ", error.message);
@@ -119,7 +107,6 @@ const SignIn = ({ providers }) => {
   //   try {
   //     // login user with google
   //     const status = await signIn("google");
-  //     console.log(status);
   //     router.push("/u/update");
   //   } catch (error) {
   //     console.log(error.message);
@@ -274,24 +261,3 @@ const SignIn = ({ providers }) => {
 };
 
 export default SignIn;
-
-// export async function getServerSideProps(context) {
-//   let providers, csrfToken;
-//   const session = await getSession(context);
-//   if (session) {
-//     return {
-//       redirect: { destination: "/dashboard", permanent: false },
-//     };
-//   }
-//   providers = await getProviders();
-//   // providers = Object.values(await getProviders()).filter(
-//   //   (provider) => provider.id !== "credentials"
-//   // );
-//   csrfToken = await getCsrfToken(context);
-//   return {
-//     props: {
-//       providers,
-//       csrfToken: csrfToken || null,
-//     },
-//   };
-// }

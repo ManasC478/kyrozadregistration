@@ -1,3 +1,5 @@
+// all the below functions filter the errors from the api endpoints and returns a nicely formatted js object
+// with http code and message
 export const createUserErrorHandler = (error) => {
   if (
     error.message.includes("user name required") ||

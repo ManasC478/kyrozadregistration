@@ -1,42 +1,27 @@
 import Image from "next/image";
 import NavLink from "next/link";
 import {
-  Flex,
   Box,
   FormControl,
   Input,
-  FormLabel,
   FormErrorMessage,
   FormHelperText,
   VStack,
-  Link,
   Button,
   Text,
   Center,
-  Grid,
-  Checkbox,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
 } from "@chakra-ui/react";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { useFormik } from "formik";
-import {
-  getSession,
-  useSession,
-  getProviders,
-  getCsrfToken,
-  signIn,
-} from "next-auth/react";
 import { useRouter } from "next/router";
 import { useUser } from "../../lib/CustomHooks/useUser";
 
-import KyrozLogo from "../../assets/signin/kyroz-logo.png";
+import KyrozLogo from "../../assets/kyroz-logo.png";
 
-import styles from "../../styles/signin.module.css";
-
+// validates form inputs before signing in the user
 const validate = (values) => {
   const { email, password } = values;
   const errors = {};
@@ -60,10 +45,11 @@ const validate = (values) => {
 
 const SignIn = () => {
   const router = useRouter();
-  const { user, session, status, logIn } = useUser();
+  const { logIn } = useUser();
   const [errors, setErrors] = useState({});
   const [errorAlert, setErrorAlert] = useState({});
 
+  // signs in the user
   const onSubmit = async (values) => {
     const error = validate(values);
 
@@ -73,35 +59,11 @@ const SignIn = () => {
       try {
         setErrors({});
         setErrorAlert({});
-        // validate the login with database
-        // const res = await fetch("/api/a/loginUser", {
-        //   method: "POST",
-        //   headers: new Headers({ "Content-Type": "application/json" }),
-        //   body: JSON.stringify(values),
-        // });
-        // const user = (await res.json()).user;
-
-        // // if 4xx code in response throw errors
-        // switch (res.status) {
-        //   case 401:
-        //     throw new Error("Email not found");
-        //   case 403:
-        //     throw new Error("Incorrect password");
-        // }
-
-        // login user
-        // await signIn("credentials", {
-        //   redirect: false,
-        //   id: user._id,
-        //   email: user.email,
-        //   businessName: user.businessName,
-        // });
 
         const status = await logIn({
           email: values.email,
           password: values.password,
         });
-        console.log(status);
         router.replace("/dashboard");
       } catch (error) {
         console.log("pages/a/signin: ", error.message);
@@ -124,7 +86,6 @@ const SignIn = () => {
   //   try {
   //     // login user with google
   //     const status = await signIn("google");
-  //     console.log(status);
   //     router.push("/u/update");
   //   } catch (error) {
   //     console.log(error.message);
@@ -236,25 +197,5 @@ const SignIn = () => {
     </Box>
   );
 };
-
-// export async function getServerSideProps(context) {
-//   let providers, csrfToken;
-//   const session = await getSession(context);
-//   if (session) {
-//     return {
-//       redirect: { destination: "/dashboard", permanent: false },
-//     };
-//   }
-//   providers = Object.values(await getProviders()).filter(
-//     (provider) => provider.id !== "credentials"
-//   );
-//   csrfToken = await getCsrfToken(context);
-//   return {
-//     props: {
-//       providers,
-//       csrfToken: csrfToken || null,
-//     },
-//   };
-// }
 
 export default SignIn;

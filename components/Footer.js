@@ -1,64 +1,107 @@
-import styles from "../styles/footer.module.css";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  Icon,
+  Link,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { MapIcon, MailIcon, WebsiteIcon } from "../styles/icons";
+import NextLink from "next/link";
+import Image from "next/image";
+import KyrozLogo from "../assets/kyroz-logo.png";
+import { useUser } from "../lib/CustomHooks/useUser";
 
 const Footer = () => {
+  const { session } = useUser();
   return (
-    <footer className={styles.footer_dark}>
-      <div className='container'>
-        <div className='row'>
-          <div className={`col-sm-6 col-md-3 ${styles.item}`}>
-            <h3>Services</h3>
-            <ul>
-              <li>
-                <a href='#'>Web design</a>
-              </li>
-              <li>
-                <a href='#'>Development</a>
-              </li>
-              <li>
-                <a href='#'>Hosting</a>
-              </li>
-            </ul>
-          </div>
-          <div className={`col-sm-6 col-md-3 ${styles.item}`}>
-            <h3>About</h3>
-            <ul>
-              <li>
-                <a href='#'>Company</a>
-              </li>
-              <li>
-                <a href='#'>Team</a>
-              </li>
-              <li>
-                <a href='#'>Careers</a>
-              </li>
-            </ul>
-          </div>
-          <div className={`col-md-6 ${styles.item} ${styles.text}`}>
-            <h3>Company Name</h3>
-            <p>
-              Praesent sed lobortis mi. Suspendisse vel placerat ligula. Vivamus
-              ac sem lacus. Ut vehicula rhoncus elementum. Etiam quis tristique
-              lectus. Aliquam in arcu eget velit pulvinar dictum vel in justo.
-            </p>
-          </div>
-          <div className={`col item ${styles.social}`}>
-            <a href='#'>
-              <i className='icon ion-social-facebook'></i>
-            </a>
-            <a href='#'>
-              <i className='icon ion-social-twitter'></i>
-            </a>
-            <a href='#'>
-              <i className='icon ion-social-snapchat'></i>
-            </a>
-            <a href='#'>
-              <i className='icon ion-social-instagram'></i>
-            </a>
-          </div>
-        </div>
-        <p className={styles.copyright}>kyroz.in © 2021</p>
-      </div>
-    </footer>
+    <Box bg={"gray.600"}>
+      <Grid
+        templateColumns={"300px 300px 1fr"}
+        gap={10}
+        color={"white"}
+        maxW={1200}
+        mx={"auto"}
+        p={10}
+      >
+        <GridItem w={"100%"}>
+          <Text mb={3} fontSize={"lg"} fontWeight={"bold"}>
+            Resources
+          </Text>
+          <Stack spacing={2} color={"gray.300"}>
+            <Link href='https://kyroz.in/freelanceragreement.html' isExternal>
+              Freelancer Agreement
+            </Link>
+            <Link
+              href='https://kyroz.in/nondisclosureagreement.html'
+              isExternal
+            >
+              Non-Disclosure Agreement
+            </Link>
+            <Link
+              href='https://kyroz.in/softwaredevelopmentagreement.html'
+              isExternal
+            >
+              Software Development Agreement
+            </Link>
+            <Link href='https://kyroz.in/disclaimerpolicy.html' isExternal>
+              Disclaimer Policy
+            </Link>
+            <Link href='https://kyroz.in/about_us.html' isExternal>
+              About us
+            </Link>
+          </Stack>
+        </GridItem>
+        <GridItem w={"100%"}>
+          <Text mb={3} fontSize={"lg"} fontWeight={"bold"}>
+            Location
+          </Text>
+          <Stack spacing={2} color={"gray.300"}>
+            <Stack isInline spacing={2} align={"center"}>
+              <Icon as={MapIcon} />
+              <Text>Hyderabad, Telangana, India 502313.</Text>
+            </Stack>
+            <Stack isInline spacing={2} align={"center"}>
+              <Icon as={MailIcon} />
+              <Link href='mailto:contact@kyroz.in'>contact@kyroz.in</Link>
+            </Stack>
+            <Stack isInline spacing={2} align={"center"}>
+              <Icon as={WebsiteIcon} />
+              <Link href='https://kyroz.in' isExternal>
+                www.kyroz.in
+              </Link>
+            </Stack>
+          </Stack>
+        </GridItem>
+        <GridItem w={"100%"}>
+          <Stack spacing={4}>
+            <Image src={KyrozLogo} alt='Kyroz' layout='fixed' />
+            <Text>
+              kyroz.in is a Social Networking App for those who have Passion to
+              design the Future.
+            </Text>
+            {session ? (
+              <NextLink href='/dashboard' passHref>
+                <Button
+                  variant={"outline"}
+                  _hover={{ bg: "gray.100", color: "gray.600" }}
+                >
+                  Dashboard
+                </Button>
+              </NextLink>
+            ) : (
+              <NextLink href='/a/signup' passHref>
+                <Button bg={"#dc3545"} _hover={{ bg: "red.400" }}>
+                  Sign Up
+                </Button>
+              </NextLink>
+            )}
+          </Stack>
+        </GridItem>
+      </Grid>
+    </Box>
   );
 };
 

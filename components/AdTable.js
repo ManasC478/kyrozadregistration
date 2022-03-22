@@ -19,18 +19,6 @@ const AdTable = ({ sites }) => {
         </Tr>
       </thead>
       <tbody>
-        {/* {sites.map((site, index) => (
-          <Box as='tr' key={index}>
-            <Td fontWeight='medium'>{site.name}</Td>
-            <Td>{site.link}</Td>
-            <Td>
-              <NextLink href='/p/[siteId]' as={`/p/${site.id}`} passHref>
-                <Link href={`/p/${site.id}`}>View Feedback</Link>
-              </NextLink>
-            </Td>
-            <Td>{format(parseISO(site.createdAt), "PPpp")}</Td>
-          </Box>
-        ))} */}
         <Box as='tr'>
           <Td fontWeight='medium'>ad 1</Td>
 

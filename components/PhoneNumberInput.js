@@ -16,7 +16,6 @@ export default function PhoneNumberInput({ formik }) {
         <Box pos={"relative"} w={"60px"} pr={5}>
           <Select
             variant='flushed'
-            bottom='0'
             right='0'
             zIndex={1}
             bottom={0}

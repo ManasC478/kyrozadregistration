@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 import { isEmail } from "validator";
 
+/**
+ * USERS
+ * Note: This collection contains user data. Users should only be able to view and update their own data.
+ */
 const userSchema = new mongoose.Schema({
   name: {
     type: String,

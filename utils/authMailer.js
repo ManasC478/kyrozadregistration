@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+// email sender - not functional
 export default async ({
   identifier: email,
   url,

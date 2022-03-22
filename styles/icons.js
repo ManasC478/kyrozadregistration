@@ -11,6 +11,9 @@ import {
   MdOutlineImage,
   MdCheck,
   MdOutlineSettings,
+  MdMap,
+  MdOutlineEmail,
+  MdOutlineWeb,
 } from "react-icons/md";
 import { FaMoneyCheck, FaRegThumbsUp } from "react-icons/fa";
 import { Icon } from "@chakra-ui/icons";
@@ -43,3 +46,6 @@ export const CheckIcon = (props) => <Icon {...props} as={MdCheck} />;
 export const SettingsIcon = (props) => (
   <Icon {...props} as={MdOutlineSettings} />
 );
+export const MapIcon = (props) => <Icon {...props} as={MdMap} />;
+export const MailIcon = (props) => <Icon {...props} as={MdOutlineEmail} />;
+export const WebsiteIcon = (props) => <Icon {...props} as={MdOutlineWeb} />;

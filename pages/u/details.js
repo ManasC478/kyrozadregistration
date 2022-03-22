@@ -1,13 +1,11 @@
 import Link from "next/link";
 import {
   Box,
-  Avatar,
   Grid,
   GridItem,
   Select,
   FormControl,
   Input,
-  FormHelperText,
   FormErrorMessage,
   VStack,
   HStack,
@@ -22,6 +20,7 @@ import { SelectDownIcon } from "../../styles/icons";
 import PhoneNumberInput from "../../components/PhoneNumberInput";
 import UserAvatar from "../../components/UserAvatar";
 
+// validates the form input before updating in database
 const validate = (values) => {
   const { name, number, url, category } = values;
   const errors = {};
@@ -43,10 +42,11 @@ const validate = (values) => {
 
 const BusinessUpdate = () => {
   const router = useRouter();
-  const { user, updateUser, session, status } = useUser();
+  const { user, updateUser, session, isLoading } = useUser();
 
   const [errors, setErrors] = useState({});
 
+  // function called when form submitted
   const onSubmit = async (values) => {
     const error = validate(values);
 
@@ -79,8 +79,9 @@ const BusinessUpdate = () => {
     onSubmit,
   });
 
+  // upon the user data loading the formik values are updated to display the data on ui
   useEffect(() => {
-    if (user && status === "authenticated") {
+    if (user && !isLoading) {
       const u = {
         name: user?.name || "",
         number: user?.number || "",
@@ -91,7 +92,7 @@ const BusinessUpdate = () => {
         imageBg: user?.imageColor || "",
       };
 
-      // formik.setValues(u);
+      formik.setValues(u);
     }
   }, [user]);
 

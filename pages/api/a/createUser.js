@@ -13,14 +13,14 @@ const userImageColor = [
 
 // create user with credentials
 export default async (req, res) => {
-  if (req.method !== "POST")
-    return res
-      .status(405)
-      .json({
-        success: false,
-        status: 405,
-        message: "Request method not accepted.",
-      });
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({
+      success: false,
+      status: 405,
+      message: "Request method not accepted.",
+    });
+  }
   try {
     const { name, email, password } = req.body;
     const color =
@@ -63,6 +63,7 @@ export default async (req, res) => {
     });
   } catch (error) {
     console.log("pages/api/a/createUser: ", error.message);
+    // calls error handler function to format the error nicely
     const { status, message } = createUserErrorHandler(error);
     res.status(status).json({ success: false, status, message });
   }

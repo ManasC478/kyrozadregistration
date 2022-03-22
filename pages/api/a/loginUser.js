@@ -1,32 +1,18 @@
-import { isEmailInUse, validatePassword, loginUser } from "../../../lib/dbUser";
+import { loginUser } from "../../../lib/dbUser";
 import { loginUserErrorHandler } from "../../../utils/apiErrorHandlers";
 
 export default async (req, res) => {
-  // if (req.method !== "POST")
-  //   return res.status(405).json({
-  //     success: false,
-  //     status: 405,
-  //     message: "Request method not accepted.",
-  //   });
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({
+      success: false,
+      status: 405,
+      message: "Request method not accepted.",
+    });
+  }
   try {
     // const { email, password } = JSON.parse(req.body);
-    console.log("loguser");
     const { email, password } = req.body;
-    console.log(req.body);
-
-    //   check is user is already signed up and throw error
-    // const user = await isEmailInUse(email);
-    // if (!user) {
-    //   return res
-    //     .status(401)
-    //     .json({ success: false, message: "Email not found" });
-    // } else if (!(await validatePassword(password, user.password))) {
-    //   return res
-    //     .status(403)
-    //     .json({ success: false, message: "Incorrect password" });
-    // }
-
-    // res.status(200).json({ success: true, message: "User validated", user });
 
     // check if all fields are passed in
     if (email && password) {
@@ -62,6 +48,7 @@ export default async (req, res) => {
     });
   } catch (error) {
     console.log("pages/api/a/loginUser: ", error.message);
+    // calls error handler function to format the error nicely
     const { status, message } = loginUserErrorHandler(error);
     res.status(status).json({ success: false, status, message });
   }

@@ -3,17 +3,12 @@ import {
   HStack,
   Flex,
   Text,
-  Link,
   Button,
-  Avatar,
   IconButton,
-  InputGroup,
-  Input,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-  MenuDivider,
   Center,
 } from "@chakra-ui/react";
 import { useUser } from "../lib/CustomHooks/useUser";
@@ -30,14 +25,8 @@ import {
 import UserAvatar from "./UserAvatar";
 
 import NavLink from "next/link";
-import { useSession, signOut } from "next-auth/react";
-
-import DefaultAvatar from "../assets/default-avatar.png";
-
-import styles from "../styles/navbar.module.css";
 
 const Navbar = () => {
-  // const { data: session, status } = useSession();
   const { signOutUser, session, user } = useUser();
 
   return (
@@ -66,10 +55,6 @@ const Navbar = () => {
             Kyroz
           </Text>
         </HStack>
-        {/* <InputGroup w={"200px"}>
-          <MenuIcon boxSize={5} />
-          <Input />
-        </InputGroup> */}
 
         {session ? (
           <HStack spacing={5} alignItems='center' justifyContent='center'>

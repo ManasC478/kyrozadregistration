@@ -1,6 +1,4 @@
-import Head from "next/head";
 import NextImage from "next/image";
-import { useSession, signIn, signOut } from "next-auth/react";
 import {
   Box,
   Heading,
@@ -31,9 +29,6 @@ import GooglePlayBadge from "../assets/google-play-badge.png";
 import AppStoreBadge from "../assets/app-store-badge.png";
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  console.log(session);
-
   return (
     <Box>
       <Flex
@@ -51,18 +46,11 @@ export default function Home() {
         />
         <VStack spacing={"40px"} color={"white"} zIndex={1}>
           <Heading as={"h1"}>KYROZ FOR ADVERTISERS</Heading>
-          {/* <Divider
-          color={"dc3546"}
-          // orientation={"horizontal"}
-          size={"10px"}
-          height={"10px"}
-        /> */}
           <Box w={"50px"} h={"5px"} bg={"#dc3546"} borderRadius={"full"}></Box>
           <Text as={"p"} fontSize={"lg"}>
             The Place to advertise your adverstisements for atmost.
           </Text>
           <Button
-            bg={""}
             py={"30px"}
             px={"50px"}
             bg={"#dc3546"}
@@ -90,7 +78,6 @@ export default function Home() {
             for the advertisers
           </Text>
           <Button
-            bg={""}
             py={"30px"}
             px={"50px"}
             bg={"white"}
@@ -370,20 +357,6 @@ export default function Home() {
           </VStack>
         </Center>
       </Box>
-      {/* {session ? (
-          <>
-            Signed in as {session.user.email} <br />
-            <img src={session.user.image} alt={session.user.name} />
-            <br />
-            <p>{session.user.name}</p>
-            <button onClick={() => signOut()}>Sign out</button>
-          </>
-        ) : (
-          <>
-            not signed in <br />
-            <button onClick={() => signIn()}>Sign in</button>
-          </>
-        )} */}
     </Box>
   );
 }
